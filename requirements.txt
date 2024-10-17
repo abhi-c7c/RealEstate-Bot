@@ -1,0 +1,6 @@
+flask
+langchain-core
+langchain-ollama
+flask_session
+urllib3
+gunicorn
