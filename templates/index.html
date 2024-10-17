@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstateGuru</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://c4.wallpaperflare.com/wallpaper/893/611/579/luxurious-interior-living-room-set-wallpaper-preview.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.85); /* Slightly transparent to show the background */
+            padding: 10px;
+        }
+
+        .chat-header {
+            background-color: purple;
+            color: white;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-header img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .chat-header .status {
+            font-size: 12px;
+            color: lightgreen;
+        }
+
+        .chat-box {
+            background-color: rgba(255, 255, 255, 0.0); /* Transparent background for the chat box */
+            padding: 15px;
+            height: 350px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            background-color: rgba(255, 255, 255, 0.85); /* Slightly transparent messages */
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            max-width: 75%;
+        }
+
+        .message.host {
+            background-color: rgba(230, 247, 255, 0.85); /* Slightly transparent for the host */
+            align-self: flex-start;
+            border-radius: 10px 10px 10px 0;
+        }
+
+        .message.guest {
+            background-color: rgba(217, 253, 211, 0.85); /* Slightly transparent for the guest */
+            align-self: flex-end;
+            border-radius: 10px 10px 0 10px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: gray;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Bullet Point Formatting */
+        .message ul {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+
+        .message ul li {
+            margin-bottom: 5px;
+        }
+
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            background-color: white; /* Solid background for input */
+        }
+
+        .chat-input input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            outline: none;
+            margin-right: 10px;
+        }
+
+        .chat-input button {
+            background-color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-input button img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .restart-btn {
+            background-color: purple;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 20px;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-header">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdidmgfVbI34U_GS2ZwUn5IS9M-ciAlr7Cjw&s" alt="Airbnb">
+            <div>
+                <h4>Airbnb-Bot</h4>
+                <span class="status"></span>
+            </div>
+        </div>
+
+        <div class="chat-box">
+            {% if conversation %}
+                {% for chat in conversation %}
+                <div class="message guest">
+                    <p>{{ chat.question }}</p>
+                    <span class="message-time">{{ chat.time }}</span>
+                </div>
+                <div class="message host">
+                    <!-- Checking if the response has a bullet-point format -->
+                    {% if chat.response_type == "bullet" %}
+                    <ul>
+                        {% for point in chat.response %}
+                        <li>{{ point }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>{{ chat.response|safe }}</p>
+                    {% endif %}
+                    <span class="message-time">{{ chat.time }}</span>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <form method="POST" action="/" class="chat-input">
+            <input type="text" id="question" name="question" placeholder="Enter your question here..." required>
+            <button type="submit">
+                <img src="https://cdn-icons-png.flaticon.com/512/3682/3682321.png" alt="Send">
+            </button>
+        </form>
+
+        <!-- Restart Conversation Button -->
+        <form method="POST" action="/">
+            <button type="submit" name="restart" value="true" class="restart-btn">Restart Conversation</button>
+        </form>
+    </div>
+</body>
+</html>
